@@ -8,7 +8,7 @@ void main() async {
   
   await Supabase.initialize(
     url: 'https://dzjwbvdhdlkuxeacftcr.supabase.co',
-    anonKey: 'Tera_anon_key_yaha_daal',
+    anonKey: 'TERA_SUPABASE_ANON_KEY_YAHA_DAL', 
   );
   
   runApp(const MyApp());
@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
-        // tera elevatedButtonTheme wala code yaha rahega
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFFF9933),
@@ -47,7 +46,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      // YE HAI ASLI CHANGE - LINE 58
       home: StreamBuilder<AuthState>(
         stream: supabase.auth.onAuthStateChange,
         builder: (context, snapshot) {
