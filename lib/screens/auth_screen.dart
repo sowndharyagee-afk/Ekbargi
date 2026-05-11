@@ -21,32 +21,34 @@ class _AuthScreenState extends State<AuthScreen> {
     
     try {
       if (_isLogin) {
+        // LOGIN
         await supabase.auth.signInWithPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
       } else {
+        // SIGN UP
         await supabase.auth.signUp(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
       }
-      
+
       if (mounted) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(_isLogin ? 'Login successful' : 'Sign up successful'),
-      backgroundColor: Colors.green,
-    ),
-  );
-  
-  // Ye 2 line add kar - Confirm email OFF hai toh turant Home bhej dega
-  if (supabase.auth.currentUser != null) {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
-  }
-}
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_isLogin ? 'Login successful' : 'Sign up successful'),
+            backgroundColor: Colors.green,
           ),
         );
+        
+        // Confirm email OFF hai toh turant Home bhej dega
+        if (supabase.auth.currentUser != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        }
       }
     } on AuthException catch (error) {
       if (mounted) {
@@ -60,14 +62,16 @@ class _AuthScreenState extends State<AuthScreen> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Unexpected error occurred'),
             backgroundColor: Colors.red,
           ),
         );
       }
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -81,76 +85,57 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Icon(
-                Icons.groups_2_rounded,
-                size: 80,
-                color: Color(0xFFFF9933),
+      appBar: AppBar(
+        title: Text(_isLogin ? 'Login' : 'Sign Up'),
+        backgroundColor: const Color(0xFFFF9933),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.account_circle,
+              size: 100,
+              color: Color(0xFFFF9933),
+            ),
+            const SizedBox(height: 40),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                prefixIcon: Icon(Icons.email),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'EKbargi',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF000080),
-                ),
-                textAlign: TextAlign.center,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                prefixIcon: Icon(Icons.lock),
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'Ek Saath, Ek Awaaz',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
-                textAlign: TextAlign.center,
+              obscureText: true,
+            ),
+            const SizedBox(height: 30),
+            _isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: _handleAuth,
+                    child: Text(_isLogin ? 'Login' : 'Sign Up'),
+                  ),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                setState(() => _isLogin = !_isLogin);
+              },
+              child: Text(
+                _isLogin
+                    ? 'Account nahi hai? Sign Up karo'
+                    : 'Pehle se account hai? Login karo',
               ),
-              const SizedBox(height: 48),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.email_outlined),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  prefixIcon: Icon(Icons.lock_outline),
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _handleAuth,
-                child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text(_isLogin ? 'Login' : 'Sign Up'),
-              ),
-              const SizedBox(height: 16),
-              TextButton(
-                onPressed: () {
-                  setState(() => _isLogin = !_isLogin);
-                },
-                child: Text(
-                  _isLogin
-                      ? 'Don\'t have an account? Sign Up'
-                      : 'Already have an account? Login',
-                  style: const TextStyle(color: Color(0xFF000080)),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
