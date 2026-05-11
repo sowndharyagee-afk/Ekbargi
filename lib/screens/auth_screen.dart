@@ -21,13 +21,11 @@ class _AuthScreenState extends State<AuthScreen> {
     
     try {
       if (_isLogin) {
-        // LOGIN
         await supabase.auth.signInWithPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
       } else {
-        // SIGN UP
         await supabase.auth.signUp(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
@@ -42,7 +40,6 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         );
         
-        // Confirm email OFF hai toh turant Home bhej dega
         if (supabase.auth.currentUser != null) {
           Navigator.pushReplacement(
             context,
@@ -62,7 +59,7 @@ class _AuthScreenState extends State<AuthScreen> {
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Unexpected error occurred'),
             backgroundColor: Colors.red,
           ),
@@ -94,10 +91,9 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.account_circle,
-              size: 100,
-              color: Color(0xFFFF9933),
+            const Text(
+              'Ekbargi',
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFFFF9933)),
             ),
             const SizedBox(height: 40),
             TextField(
