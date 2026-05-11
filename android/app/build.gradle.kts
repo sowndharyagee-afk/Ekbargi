@@ -20,7 +20,7 @@ android {
     }
 
 defaultConfig {
-    applicationId "com.mycompany.ekbargi"
+    applicationId = "com.mycompany.ekbargi"
     minSdk = flutter.minSdkVersion
     targetSdk = flutter.targetSdkVersion
     versionCode = 1
