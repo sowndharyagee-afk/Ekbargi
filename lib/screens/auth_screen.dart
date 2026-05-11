@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
+import 'home_page.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -32,10 +33,18 @@ class _AuthScreenState extends State<AuthScreen> {
       }
       
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_isLogin ? 'Login successful!' : 'Check your email to confirm!'),
-            backgroundColor: Colors.green,
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(_isLogin ? 'Login successful' : 'Sign up successful'),
+      backgroundColor: Colors.green,
+    ),
+  );
+  
+  // Ye 2 line add kar - Confirm email OFF hai toh turant Home bhej dega
+  if (supabase.auth.currentUser != null) {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+  }
+}
           ),
         );
       }
