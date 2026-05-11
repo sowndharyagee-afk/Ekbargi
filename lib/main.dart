@@ -1,40 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/auth_screen.dart';
+import 'screens/home_page.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await Supabase.initialize(
     url: 'https://dzjwbvdhdlkuxeacftcr.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6andidmRoZGxrdXhlYWNmdGNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyMjQ2ODYsImV4cCI6MjA5MzgwMDY4Nn0.9KK7i81VEDJLhYaDTOjiCqPKpfYVGf-Q1uluH4DRvNU',
+    anonKey: 'Tera_anon_key_yaha_daal',
   );
   
-  runApp(const EKbargiApp());
+  runApp(const MyApp());
 }
 
 final supabase = Supabase.instance.client;
 
-class EKbargiApp extends StatelessWidget {
-  const EKbargiApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'EKbargi',
+      title: 'Ekbargi',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFF9933), // Saffron
-          primary: const Color(0xFFFF9933),
-          secondary: const Color(0xFF000080), // Navy
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFFF9933),
-          foregroundColor: Colors.white,
-          centerTitle: true,
-        ),
+        primarySwatch: Colors.deepOrange,
+        // tera elevatedButtonTheme wala code yaha rahega
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFFF9933),
@@ -55,7 +47,16 @@ class EKbargiApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const AuthScreen(),
+      // YE HAI ASLI CHANGE - LINE 58
+      home: StreamBuilder<AuthState>(
+        stream: supabase.auth.onAuthStateChange,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data?.session != null) {
+            return const HomePage();
+          }
+          return const AuthScreen();
+        },
+      ),
     );
   }
 }
