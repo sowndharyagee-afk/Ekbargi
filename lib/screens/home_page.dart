@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../main.dart';
+import 'auth_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -10,6 +11,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Ekbargi - Home'),
         backgroundColor: const Color(0xFFFF9933),
+        automaticallyImplyLeading: false, // Back button hata de
       ),
       body: Center(
         child: Column(
@@ -28,6 +30,7 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 await supabase.auth.signOut();
+                // StreamBuilder apne aap Login pe bhej dega
               },
               child: const Text('Logout'),
             ),
